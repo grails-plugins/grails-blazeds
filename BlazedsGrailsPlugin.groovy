@@ -1,18 +1,34 @@
 import org.springframework.web.servlet.DispatcherServlet
+import org.epseelon.grails.blazeds.security.AuthorizationAspect
+import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
 
 class BlazedsGrailsPlugin {
     // the plugin version
-    def version = "0.1"
+    def version = "1.0"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.2.0 > *"
     // the other plugins this plugin depends on
-    def dependsOn = [:]
+    def dependsOn = [acegi: "0.5.3 > *"]
+    def loadAfter = ["acegi"]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
-            "grails-app/views/error.gsp"
+            "grails-app/views/error.gsp",
+            "grails-app/views/login/auth.gsp",
+            "grails-app/views/login/denied.gsp",
+            "grails-app/views/login/openIdAuth.gsp",
+            "grails-app/domain/Requestmap.groovy",
+            "grails-app/domain/Role.groovy",
+            "grails-app/domain/User.groovy",
+            "grails-app/controllers/LoginController.groovy",
+            "grails-app/controllers/LogoutController.groovy",
+            "grails-app/conf/SecurityConfig.groovy",
+            "web-app/css/*",
+            "web-app/images/*",
+            "web-app/images/skin/*",
+            "web-app/js/*",
+            "web-app/js/prototype/*"
     ]
 
-    // TODO Fill in these fields
     def author = "Sebastien Arbogast"
     def authorEmail = "sebastien.arbogast@gmail.com"
     def title = "Grails BlazeDS 4 Integration"
@@ -24,6 +40,15 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
     def documentation = "http://grails.org/plugin/blazeds"
 
     def doWithWebDescriptor = { xml ->
+
+        //listeners
+        def listeners = xml.listener
+        listeners[listeners.size() - 1] + {
+            listener {
+                'listener-class'('flex.messaging.HttpFlexSession')
+            }
+        }
+
         //servlets
         def servlets = xml.servlet
         servlets[servlets.size() - 1] + {
@@ -65,7 +90,10 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
     }
 
     def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
+        autoProxyCreator(AnnotationAwareAspectJAutoProxyCreator){
+            proxyTargetClass = true
+        }
+        securityAspect(AuthorizationAspect)
     }
 
     def doWithDynamicMethods = { ctx ->
@@ -73,7 +101,7 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
     }
 
     def doWithApplicationContext = { applicationContext ->
-        // TODO Implement post initialization spring config (optional)
+
     }
 
     def onChange = { event ->

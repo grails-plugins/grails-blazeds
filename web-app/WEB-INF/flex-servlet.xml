@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:flex="http://www.springframework.org/schema/flex"
+       xmlns:flex="http://www.springframework.org/schema/flex"
     xmlns:security="http://www.springframework.org/schema/security"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
@@ -20,17 +20,13 @@
           class="org.springframework.security.ui.preauth.PreAuthenticatedProcessingFilterEntryPoint"/>
 
     <!--This authentication provider is the one defined by Spring Acegi plugin-->
-    <security:authentication-provider user-service-ref="userDetailsService">
-        <security:password-encoder ref="passwordEncoder"/>
-    </security:authentication-provider>
+    <security:authentication-provider user-service-ref="userDetailsService"/>
 
     <flex:message-broker>
         <flex:secured/>
     </flex:message-broker>
 
     <context:annotation-config />
-
-    <!--TODO Uncomment the following element and adapt root package to scan for services to be remoted-->
-	<!--<context:component-scan base-package="my.root.package" />-->
+	<context:component-scan base-package="com.epseelon.grails.blazeds" />
 
 </beans>
