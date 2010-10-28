@@ -1,31 +1,48 @@
-grails.project.class.dir = "target/classes"
-grails.project.test.class.dir = "target/test-classes"
-grails.project.test.reports.dir	= "target/test-reports"
-//grails.project.war.file = "target/${appName}-${appVersion}.war"
+grails.project.class.dir = 'target/classes'
+grails.project.test.class.dir = 'target/test-classes'
+grails.project.test.reports.dir = 'target/test-reports'
+
 grails.project.dependency.resolution = {
-    // inherit Grails' default dependencies
-    inherits( "global" ) {
-        // uncomment to disable ehcache
-        // excludes 'ehcache'
-    }
-    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-    repositories {        
-        grailsPlugins()
-        grailsHome()
 
-        // uncomment the below to enable remote dependency resolution
-        // from public Maven repositories
-        //mavenLocal()
-        //mavenCentral()
-        //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
-    }
-    dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
+	inherits 'global'
 
-        // runtime 'mysql:mysql-connector-java:5.1.5'
-    }
+	log 'warn'
 
+	repositories {
+		grailsPlugins()
+		grailsHome()
+		grailsCentral()
+
+		mavenRepo 'http://maven.springframework.org/external' // blazeds
+		mavenRepo 'http://maven.springframework.org/milestone' // flex-core:1.5.0.M1
+		ebr() // SpringSource  http://www.springsource.com/repository
+		mavenCentral()
+
+		mavenRepo 'http://maven.sinusgear.com/maven_repo' // flex-messaging-opt, flex-rds-server
+	}
+
+	dependencies {
+		// TODO open-ended versions
+		runtime 'org.codehaus.jackson:com.springsource.org.codehaus.jackson:1.4.3'
+		runtime 'org.apache.xalan:com.springsource.org.apache.xml.serializer:2.7.1'
+		runtime('org.apache.commons:com.springsource.org.apache.commons.httpclient:3.1.0') {
+			excludes 'com.springsource.org.apache.commons.logging'
+		}
+		runtime 'edu.emory.mathcs.backport:com.springsource.edu.emory.mathcs.backport:3.1.0'
+
+		runtime('org.springframework.flex:spring-flex-core:1.5.0.M1') {
+			transitive = false
+		}
+
+//		http://maven.sinusgear.com/maven_repo/com/adobe/flex/flex-messaging-opt/4.0.0.14931.1/
+
+		runtime 'com.adobe.blazeds:blazeds-common:4.0.0.14931',
+		        'com.adobe.blazeds:blazeds-core:4.0.0.14931',
+				  'com.adobe.blazeds:blazeds-proxy:4.0.0.14931',
+				  'com.adobe.blazeds:blazeds-remoting:4.0.0.14931'
+
+//		runtime 'com.adobe.flex:flex-messaging-opt:4.0.0.14931.1',
+//		        'com.adobe.flex:flex-rds-server:4.0.0.14931.1'
+		runtime 'com.adobe.flex:flex-messaging-opt:4.0.0.14931.1'
+	}
 }
