@@ -1,8 +1,0 @@
-DefaultPackage
-grails-app.conf
-grails-app.conf.spring
-grails-app.controllers
-grails-app.domain
-grails-app.services
-scripts
-src.groovy.org.epseelon.grails.blazeds.security
