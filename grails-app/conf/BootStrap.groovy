@@ -1,27 +1,19 @@
 class BootStrap {
 
-    def init = {servletContext ->
+    def init = { servletContext ->
         User.withTransaction {
             User user = new User(
                     username: "admin",
-                    userRealName: "Admin",
                     passwd: "d033e22ae348aeb5660fc2140aec35850c4da997",
-                    email: "admin@epseelon"
-            )
-            user.save()
+                    enabled: true
+            ).save()
 
             Role role = new Role(
                     description: "Administrator",
                     authority: "ROLE_ADMIN"
-            )
-            role.save()
+            ).save()
 
-            user.addToAuthorities(role)
+            UserRole.create user, role
         }
     }
-
-    def destroy = {
-    }
-
-
-} 
+}

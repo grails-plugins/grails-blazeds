@@ -1,37 +1,22 @@
-
-
-
-
-/**
- * User domain class.
- */
 class User {
-	static transients = ['pass']
-	static hasMany = [authorities: Role]
-	static belongsTo = Role
 
-	/** Username */
 	String username
-	/** User Real Name*/
-	String userRealName
-	/** MD5 Password */
-	String passwd
-	/** enabled */
+	String password
 	boolean enabled
-
-	String email
-	boolean emailShow
-
-	/** description */
-	String description = ''
-
-	/** plain password to create a MD5 password */
-	String pass = '[secret]'
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
 	static constraints = {
-		username(blank: false, unique: true)
-		userRealName(blank: false)
-		passwd(blank: false)
-		enabled()
+		username blank: false, unique: true
+		password blank: false
+	}
+
+	static mapping = {
+		password column: '`password`'
+	}
+
+	Set<Role> getAuthorities() {
+		UserRole.findAllByUser(this).collect { it.role } as Set
 	}
 }

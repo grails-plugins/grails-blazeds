@@ -1,6 +1,5 @@
-/**
- * Logout Controller (Example).
- */
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
 class LogoutController {
 
 	/**
@@ -8,6 +7,6 @@ class LogoutController {
 	 */
 	def index = {
 		// TODO  put any pre-logout code here
-		redirect(uri: '/j_spring_security_logout')
+		redirect uri: SpringSecurityUtils.securityConfig.logout.filterProcessesUrl // '/j_spring_security_logout'
 	}
 }
