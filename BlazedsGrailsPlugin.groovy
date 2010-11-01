@@ -53,7 +53,9 @@ class BlazedsGrailsPlugin {
 		"grails-app/services/**",
 		"web-app/css/**",
 		"web-app/images/**",
-		"web-app/js/**"
+		"web-app/js/**",
+		'docs/**',
+		'src/docs/**'
 	]
 
 	def author = "Sebastien Arbogast"
@@ -110,6 +112,8 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
 		}
 
 		if (manager?.hasGrailsPlugin('hibernate')) {
+
+			// we add the filter right after the last context-param
 			def contextParam = xml.'context-param'
 			contextParam[contextParam.size() - 1] + {
 				'filter' {
@@ -118,8 +122,9 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
 				}
 			}
 
-			def filters = xml.'filter'
-			filters + {
+			def filterMappings = xml.'filter-mapping'
+			def lastFilterMapping = filterMappings[filterMappings.size() - 1]
+			lastFilterMapping + {
 				'filter-mapping'{
 					'filter-name'('blazedsOpenSessionInViewFilter')
 					'url-pattern'('/messagebroker/*')

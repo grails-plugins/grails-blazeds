@@ -8,23 +8,69 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.groovy.grails.orm.hibernate.support.GrailsOpenSessionInViewFilter;
+import org.hibernate.FlushMode;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.orm.hibernate3.SessionHolder;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
- * Subclass that ignores <code>IllegalStateException</code>s due to multiple calls to close the Hibernate session.
+ * Overrides <code>doFilterInternal()</code> to just flush the session but not close it, since that will
+ * be done in <code>HibernatePersistenceContextInterceptor.destroy()</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public class BlazedsOpenSessionInViewFilter extends GrailsOpenSessionInViewFilter {
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+	protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
+			final FilterChain filterChain) throws ServletException, IOException {
+
+		SessionFactory sessionFactory = lookupSessionFactory(request);
+		boolean participate = false;
+
+		if (isSingleSession()) {
+			// single session mode
+			if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
+				// Do not modify the Session: just set the participate flag.
+				participate = true;
+			}
+			else {
+				logger.debug("Opening single Hibernate Session in OpenSessionInViewFilter");
+				Session session = getSession(sessionFactory);
+				TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+			}
+		}
+		else {
+			// deferred close mode
+			if (SessionFactoryUtils.isDeferredCloseActive(sessionFactory)) {
+				// Do not modify deferred close: just set the participate flag.
+				participate = true;
+			}
+			else {
+				SessionFactoryUtils.initDeferredClose(sessionFactory);
+			}
+		}
 
 		try {
-			super.doFilterInternal(request, response, filterChain);
+			filterChain.doFilter(request, response);
 		}
-		catch (IllegalStateException ignored) {
-			// ok to ignore, HibernatePersistenceContextInterceptor.destroy() has already closed the session
+		finally {
+			if (!participate) {
+				if (isSingleSession()) {
+					// single session mode
+					SessionHolder sessionHolder = (SessionHolder)TransactionSynchronizationManager.getResource(sessionFactory);
+					// flush the session - it will get closed in HibernatePersistenceContextInterceptor.destroy()
+					if (!FlushMode.MANUAL.equals(sessionHolder.getSession().getFlushMode())) {
+						sessionHolder.getSession().flush();
+					}
+				}
+				else {
+					// deferred close mode
+					SessionFactoryUtils.processDeferredClose(sessionFactory);
+				}
+			}
 		}
 	}
 }
