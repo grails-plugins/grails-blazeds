@@ -235,12 +235,12 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
 			String destinationId = annotation.value() ?: beanName
 			List<String[]> excludesAndIncludes = extractExcludeAndIncludeMethods(clazz)
 
-			createRemotingDestination(beanName, destinationId, annotation.channels(),
+			createRemotingDestination(clazz, beanName, destinationId, annotation.channels(),
 				annotation.serviceAdapter(), excludesAndIncludes[1], excludesAndIncludes[0])
 		}
 	}
 
-	private createRemotingDestination = { String beanName, String remotingDestination,
+	private createRemotingDestination = { Class serviceClazz, String beanName, String remotingDestination,
 	                                      String[] channelNames, String serviceAdapterName,
 	                                      String[] includes, String[] excludes ->
 
