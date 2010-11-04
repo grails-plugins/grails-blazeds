@@ -1,5 +1,6 @@
 /cobertura.ser
 stacktrace.log
+/docs
 /target
 /grails-blazeds-*.zip
 /plugin.xml
