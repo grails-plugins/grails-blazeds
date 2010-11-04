@@ -178,13 +178,16 @@ class BlazeDsRemotingDestinationExporter extends AbstractDestinationFactory impl
 	void setIncludeMethods(String[] methods) {
 		includeMethods = StringUtils.trimArrayElements(methods)
 	}
+}
 
-	private final class ServiceFactoryInstance extends FactoryInstance {
-		ServiceFactoryInstance(FlexFactory factory, String id, ConfigMap properties) {
-			super(factory, id, properties)
-		}
+class ServiceFactoryInstance extends FactoryInstance {
+	private final FlexFactory factory
 
-		@Override
-		Object lookup() { BlazeDsRemotingDestinationExporter.this.service }
+	ServiceFactoryInstance(FlexFactory factory, String id, ConfigMap properties) {
+		super(factory, id, properties)
+		this.factory = factory
 	}
+
+	@Override
+	Object lookup() { factory.service }
 }
