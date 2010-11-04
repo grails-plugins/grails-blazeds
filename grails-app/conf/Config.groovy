@@ -14,6 +14,10 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
+grails.doc.authors = 'Sebastien Arbogast, Burt Beckwith'
+grails.doc.license = 'Apache License 2.0'
+grails.doc.title = 'BlazeDS Plugin'
+
 // Added by the Spring Security Core plugin:
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'User'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'UserRole'

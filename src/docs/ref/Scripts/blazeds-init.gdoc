@@ -1,0 +1,13 @@
+h1. blazeds-init
+
+h2. Purpose
+
+Initializes the BlazeDS development environment. This script is automatically run when installing
+the plugin and should only need to be run once.
+
+bc.
+   grails blazeds-init
+
+h2. Description
+
+The script copies an initial @services-config.xml@ configuration file to the @web-app/WEB-INF/flex@ folder.

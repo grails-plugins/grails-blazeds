@@ -1,0 +1,14 @@
+h4. The first step is installing the plugin:
+
+{code}
+grails install-plugin blazeds
+{code}
+
+This will transtitively install the [Spring Security Core|http://grails.org/plugin/spring-security-core], and [Spring Security ACL|http://grails.org/plugin/spring-security-acl] plugins. Refer to the documentation for these plugins for configuration options. At a minimum you'll need to run the @s2-quickstart@ script to configure Spring Security Core, e.g.
+
+{code}
+grails s2-quickstart com.yourcompany.yourapp User Role
+{code}
+
+The Spring Security ACL plugin has no required initialization steps.
+

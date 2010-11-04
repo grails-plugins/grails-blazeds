@@ -1,0 +1,3 @@
+The BlazeDS plugin makes it easier to build Grails-powered Rich Internet Applications using the [Adobe BlazeDS|http://opensource.adobe.com/wiki/display/blazeds/BlazeDS/] remoting and messaging framework, as well as the [Spring Security Core|http://grails.org/plugin/spring-security-core] plugin to secure your application. The plugin also adds support for lazy loading to make it easier to work with GORM and Hibernate.
+
+Using the BlazeDS plugin you can easily push data to Flex AIR clients. The [Grails Flex|http://grails.org/plugin/flex] plugin can 
