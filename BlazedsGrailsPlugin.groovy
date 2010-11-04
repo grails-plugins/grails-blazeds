@@ -6,6 +6,7 @@ import grails.plugin.blazeds.BlazeDsPropertyProxy
 import grails.plugin.blazeds.BlazeDsRemotingDestinationExporter
 import grails.plugin.blazeds.BlazeDsUrlHandlerMapping
 
+import grails.persistence.Event
 import grails.util.GrailsNameUtils
 
 import java.lang.reflect.Method
@@ -112,6 +113,9 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
 		}
 
 		if (manager?.hasGrailsPlugin('hibernate')) {
+			if (blazedsConfig.disableOpenSessionInView instanceof Boolean && blazedsConfig.disableOpenSessionInView) {
+				return
+			}
 
 			// we add the filter right after the last context-param
 			def contextParam = xml.'context-param'
@@ -207,12 +211,12 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
 
 		flex.'message-broker'('services-config-path': '/WEB-INF/flex/services-config.xml',
 		                      'disable-default-mapping': true) {
-			String defaultMessageChannels = CH.config.grails.plugin.blazeds.defaultMessageChannels ?: ''
+			String defaultMessageChannels = getBlazedsConfig().defaultMessageChannels ?: ''
 			if (defaultMessageChannels) {
 				'message-service'('default-channels': defaultMessageChannels)
 				debug "default message service channels: $defaultMessageChannels"
 			}
-			String defaultRemoteChannels = CH.config.grails.plugin.blazeds.defaultRemoteChannels ?: ''
+			String defaultRemoteChannels = getBlazedsConfig().defaultRemoteChannels ?: ''
 			if (defaultRemoteChannels) {
 				'remoting-service'('default-channels': defaultRemoteChannels)
 				debug "default remoting service channels: $defaultRemoteChannels"
@@ -308,7 +312,7 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
 	private void initDomainClassProxies(ctx) {
 		def conversionService = ctx.blazeDsConversionService
 
-		def ignoreNames = ['class', 'metaClass', 'hibernateLazyInitializer']
+		def ignoreNames = Event.allEvents.toList() << 'class' << 'metaClass' << 'hibernateLazyInitializer'
 		if (blazedsConfig.proxyIgnoreProperties instanceof List) {
 			ignoreNames = blazedsConfig.proxyIgnoreProperties
 			debug "configuring domain class proxies to ignore $ignoreNames"
