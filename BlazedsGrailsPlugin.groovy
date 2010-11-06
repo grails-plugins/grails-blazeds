@@ -234,6 +234,10 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
 
 	private createRemotingDestinations = {
 
+		// if we create a bean with this name Spring-Flex won't register a RemotingAnnotationPostProcessor which
+		// finds annotated destinations in 1.2 but not in 1.3; we find them all in either case so it's not needed
+		'_flexRemotingAnnotationPostProcessor'(Object)
+
 		createRemotingDestination.delegate = delegate
 
 		for (GrailsServiceClass serviceClass in application.serviceClasses) {
