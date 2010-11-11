@@ -40,7 +40,7 @@ import org.springframework.util.ReflectionUtils.MethodCallback
 import org.springframework.util.ReflectionUtils.MethodFilter
 
 class BlazedsGrailsPlugin {
-	def version = "1.1"
+	def version = "2.0"
 	def grailsVersion = "1.2.2 > *"
 	def dependsOn = ['springSecurityAcl': '1.0 > *']
 	def loadAfter = ['springSecurityAcl']
