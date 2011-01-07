@@ -40,7 +40,7 @@ import org.springframework.util.ReflectionUtils.MethodCallback
 import org.springframework.util.ReflectionUtils.MethodFilter
 
 class BlazedsGrailsPlugin {
-	def version = "2.0"
+	def version = "2.0.1"
 	def grailsVersion = "1.2.2 > *"
 	def dependsOn = ['springSecurityAcl': '1.0 > *']
 	def loadAfter = ['springSecurityAcl']
@@ -84,8 +84,8 @@ Basic plugin to integrate BlazeDS 4 into Grails so that you can connect to a Gra
 		def servlets = xml.servlet
 		servlets[servlets.size() - 1] + {
 			servlet {
+                'display-name'("Flash Builder wizard helper")
 				'servlet-name'("RDSDispatchServlet")
-				'display-name'("Flash Builder wizard helper")
 				'servlet-class'("flex.rds.server.servlet.FrontEndServlet")
 				'init-param' {
 					'param-name'("messageBrokerId")
