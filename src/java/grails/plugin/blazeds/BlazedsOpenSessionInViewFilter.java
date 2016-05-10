@@ -62,7 +62,7 @@ public class BlazedsOpenSessionInViewFilter extends GrailsOpenSessionInViewFilte
 					// single session mode
 					SessionHolder sessionHolder = (SessionHolder)TransactionSynchronizationManager.getResource(sessionFactory);
 					// flush the session - it will get closed in HibernatePersistenceContextInterceptor.destroy()
-					if (!FlushMode.MANUAL.equals(sessionHolder.getSession().getFlushMode())) {
+					if (null != sessionHolder && !FlushMode.MANUAL.equals(sessionHolder.getSession().getFlushMode())) {
 						sessionHolder.getSession().flush();
 					}
 				}
